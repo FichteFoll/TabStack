@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import ctypes
+from collections.abc import Callable
 from typing import Any
 
 from .._compat import sublime
@@ -9,7 +10,7 @@ _VK_CONTROL = 0x11
 
 
 class CtrlReleasePoller:
-    def __init__(self, on_release, interval_ms):
+    def __init__(self, on_release: Callable[[], None], interval_ms: int) -> None:
         self._on_release = on_release
         self._interval_ms = interval_ms
         self._active = False

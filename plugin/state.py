@@ -54,5 +54,5 @@ def remove_view_from_all(view_id: int) -> None:
             state.session_origin_view_id = None
 
 
-def iter_states():
+def iter_states() -> list[TabStackWindowState]:
     return list(_WINDOW_STATE.values())

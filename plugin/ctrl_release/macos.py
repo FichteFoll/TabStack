@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import ctypes
 import ctypes.util
+from collections.abc import Callable
+from typing import Any
 
 from .._compat import sublime
 
@@ -11,7 +13,7 @@ _K_VK_RIGHT_CONTROL = 62
 
 
 class CtrlReleasePoller:
-    def __init__(self, on_release, interval_ms):
+    def __init__(self, on_release: Callable[[], None], interval_ms: int) -> None:
         self._on_release = on_release
         self._interval_ms = interval_ms
         self._active = False
@@ -60,7 +62,7 @@ class CtrlReleasePoller:
             )
         )
 
-    def _open_core_graphics(self):
+    def _open_core_graphics(self) -> Any | None:
         lib_name = ctypes.util.find_library("CoreGraphics")
         if lib_name is None:
             lib_name = "/System/Library/Frameworks/CoreGraphics.framework/CoreGraphics"
