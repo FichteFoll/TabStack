@@ -18,12 +18,15 @@ and restart Sublime Text.
 
 ## Usage
 
-The default Linux key bindings are:
+The key bindings are:
 
 - `ctrl+tab`
 - `ctrl+shift+tab`
 - `ctrl+up`
 - `ctrl+down`
+
+These are not configurable
+because the release detection of the `ctrl` key is hard-coded.
 
 Press one of those shortcuts to open the tab stack quick panel.
 Use the same keys to move through the list while it is open.
@@ -32,6 +35,9 @@ Press `ctrl+escape` to cancel.
 
 ## Platform Support
 
-TabStack currently supports **Linux only**.
-It relies on X11 or XWayland to detect Ctrl release events.
-Native Wayland support is unlikely to be possible.
+TabStack supports **Linux, Windows, and macOS**.
+It polls the native key state APIs to detect modifier release events.
+
+Linux relies on X11 or XWayland.
+Native Wayland support is unlikely to be possible
+due to security restrictions in the protocol.

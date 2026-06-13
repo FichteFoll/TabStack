@@ -7,7 +7,7 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Any
 
-from ._compat import sublime
+from .._compat import sublime
 
 _XK_Control_L = 0xFFE3
 _XK_Control_R = 0xFFE4

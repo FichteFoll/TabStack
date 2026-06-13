@@ -4,7 +4,7 @@ from dataclasses import dataclass
 
 from ._compat import sublime, sublime_plugin
 from .captions import caption_for_view
-from .linux_ctrl import CtrlReleasePoller
+from .ctrl_release import CtrlReleasePoller
 from .state import get_state
 
 
