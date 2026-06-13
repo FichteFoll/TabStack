@@ -8,9 +8,8 @@ before committing the switch.
 It also preserves tab ordering across sessions
 by storing each view's last activation time.
 
-<video controls muted playsinline loop>
-  <source src="./media/showcase.mp4" type="video/mp4">
-</video>
+[Video Showcase][]
+
 
 ## Installation
 
@@ -53,3 +52,4 @@ Native Wayland support is unlikely to be possible
 due to security restrictions in the protocol.
 
 [Sublime Text]: https://www.sublimetext.com/
+[Video Showcase]: https://raw.githubusercontent.com/FichteFoll/TabStack/refs/heads/main/media/showcase.mp4
