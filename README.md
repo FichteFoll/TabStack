@@ -7,6 +7,8 @@ and previews tabs in the quick panel
 before committing the switch.
 It also preserves tab ordering across sessions
 by storing each view's last activation time.
+When closing a tab,
+TabStack focuses the most recently used remaining tab.
 
 [Video Showcase][]
 

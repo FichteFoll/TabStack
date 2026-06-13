@@ -55,3 +55,25 @@ class TabStackListener(sublime_plugin.EventListener):
         window = view.window()
         if window is not None and not window.views():
             remove_window_state(window.id())
+
+    def on_pre_close(self, view) -> None:
+        if view is None:
+            return
+
+        window = view.window()
+        if window is None:
+            return
+
+        state = get_state(window)
+        if not state.mru_initialized:
+            hydrate_mru_state(state, window.views())
+
+        closing_view_id = view.id()
+        open_views = window.views()
+        for view_id in state.mru_view_ids:
+            if view_id == closing_view_id:
+                continue
+            for next_view in open_views:
+                if next_view.id() == view_id:
+                    window.focus_view(next_view)
+                    return
