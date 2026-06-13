@@ -23,7 +23,7 @@ class _X11State:
 
 
 class CtrlReleasePoller:
-    def __init__(self, on_release, interval_ms: int = 100):
+    def __init__(self, on_release, interval_ms):
         self._on_release = on_release
         self._interval_ms = interval_ms
         self._active = False

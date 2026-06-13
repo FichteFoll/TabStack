@@ -30,7 +30,7 @@ class ShowTabStackCommand(sublime_plugin.WindowCommand):
         state.session_selected_index = _initial_index(state, entries)
         _show_panel(window, state, entries)
 
-        state.poller = CtrlReleasePoller(lambda: _commit_on_release(window, state))
+        state.poller = CtrlReleasePoller(lambda: _commit_on_release(window, state), 25)
         state.poller.start()
 
 
