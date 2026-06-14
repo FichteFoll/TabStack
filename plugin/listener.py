@@ -16,10 +16,10 @@ class TabStackListener(sublime_plugin.EventListener):
 
         state = get_state(window)
         if not state.mru_initialized:
-            hydrate_mru_state(state, window.views())
+            hydrate_mru_state(state, window)
             return
 
-        hydrate_mru_state(state, window.views())
+        hydrate_mru_state(state, window)
         if state.session_active:
             return
 
@@ -66,7 +66,7 @@ class TabStackListener(sublime_plugin.EventListener):
 
         state = get_state(window)
         if not state.mru_initialized:
-            hydrate_mru_state(state, window.views())
+            hydrate_mru_state(state, window)
 
         closing_view_id = view.id()
         open_views = window.views()

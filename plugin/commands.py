@@ -58,48 +58,35 @@ class TabStackCancelCommand(sublime_plugin.WindowCommand):
 
 
 def _collect_entries(window, state) -> list[_Entry]:
-    active_ids: set[int] = set()
+    active_group_ids = {view.id() for view in window.views_in_group(window.active_group())}
     entries: list[_Entry] = []
-    live_view_ids: list[int] = []
-    window_views: list = []
+    pruned_mru_ids: list[int] = []
 
-    for view in window.views():
-        window_views.append(view)
-        if _is_tab_view(view):
-            active_ids.add(view.id())
-
-    hydrate_mru_state(state, window_views)
+    hydrate_mru_state(state, window)
 
     for view_id in state.mru_view_ids:
-        if view_id not in active_ids:
-            continue
         view = _find_view_by_id(window, view_id)
-        if view is None or not _is_tab_view(view):
+        if view is None:
             continue
-        live_view_ids.append(view_id)
+        pruned_mru_ids.append(view_id)
+        if view_id not in active_group_ids:
+            continue
         entries.append(_Entry(view_id=view_id, caption=caption_for_view(view, window)))
 
-    state.mru_view_ids = live_view_ids
+    state.mru_view_ids = pruned_mru_ids
     return entries
 
 
-def hydrate_mru_state(state, views) -> None:
+def hydrate_mru_state(state, window) -> None:
     if state.mru_initialized:
         return
 
-    state.mru_view_ids = _initial_view_ids(views)
+    state.mru_view_ids = _initial_view_ids(window.views())
     state.mru_initialized = True
 
 
 def _initial_view_ids(views) -> list[int]:
-    tab_views = []
-    for index, view in enumerate(views):
-        if _is_tab_view(view):
-            tab_views.append((index, view))
-
-    if not tab_views:
-        return []
-
+    tab_views = list(enumerate(views))
     tab_views.sort(key=lambda item: _activation_sort_key(item[1], item[0]))
     return [view.id() for _, view in tab_views]
 
@@ -109,18 +96,6 @@ def _activation_sort_key(view, fallback_index: int) -> tuple[bool, float, int]:
     if value is None:
         return True, 0.0, fallback_index
     return False, -float(value), fallback_index
-
-
-def _is_tab_view(view) -> bool:
-    settings = view.settings()
-    if settings.get("is_widget"):
-        return False
-    if settings.get("is_panel"):
-        return False
-    element = getattr(view, "element", None)
-    if callable(element) and element():
-        return False
-    return True
 
 
 def _active_view_id(window) -> int | None:
