@@ -2,28 +2,20 @@
 
 - This is a Sublime Text package, not a standalone app.
 - Runtime target is Sublime Text's Python 3.14 plugin host.
-- Root `main.py` is the only plugin entry file.
-- `main.py` clears cached `plugin.*` modules before star-importing `plugin`, so keep exposed plugin symbols in `plugin/__init__.py`.
-- Real implementation lives under `plugin/`.
-- Modifier-release detection lives in `plugin/ctrl_release/`.
+- `main.py` is the only entry file. It clears cached `plugin.*` modules before star-importing `plugin`.
+- Keep exported plugin symbols in `plugin/__init__.py`; real implementation lives under `plugin/`.
 - Per-window state is in-memory only, keyed by `window.id()` in `plugin/state.py`.
-- `TabStackListener.on_activated` updates MRU order, but ignores activation during an active quick-panel session.
-- `TabStackListener.on_close` removes closed views from all window stacks.
-- Key bindings are shared among all platforms and live in `Default.sublime-keymap`.
-- The quick-panel session context key is `setting.tab_stack_quick_panel`.
-- When that setting is `false`, `ctrl+tab`, `ctrl+shift+tab`, `ctrl+up`, and `ctrl+down` start `show_tab_stack`.
-- When that setting is `true`, those keys call `tab_stack_move`, and `escape` or `ctrl+escape` call `tab_stack_cancel`.
-- `plugin/ctrl_release/linux.py` uses X11/XWayland polling via `ctypes`; native Wayland without XWayland is unsupported.
-- `plugin/ctrl_release/windows.py` uses `GetAsyncKeyState` polling via `ctypes`.
-- `plugin/ctrl_release/macos.py` uses CoreGraphics polling via `ctypes`.
-- `show_tab_stack` starts a Ctrl-release poller and commits when Ctrl is released.
-- Tab captions come from `plugin/captions.py`; views that are widgets, panels, or non-tab elements are excluded from the MRU list.
-- Keep the MRU list per window and preserve the current preview behavior: preview must not reorder the stack.
+- MRU order is per window. `TabStackListener.on_activated` updates history, except during an active quick-panel session.
+- `TabStackListener.on_close` prunes closed sheets from history and removes empty window state.
+- Tab captions come from `plugin/captions.py`. Widgets, panels, and transient/non-tab views are excluded from the MRU list.
+- Ctrl-release detection lives in `plugin/ctrl_release/`. Linux needs X11 or XWayland; native Wayland is unsupported.
+- `show_tab_stack` opens the quick panel, starts a Ctrl-release poller, and commits when Ctrl is released.
+- The quick-panel context key is `tab_stack.quick_panel`.
+- When `tab_stack.quick_panel` is `false`, `ctrl+tab`, `ctrl+shift+tab`, `ctrl+up`, and `ctrl+down` start `show_tab_stack`.
+- When `tab_stack.quick_panel` is `true`, those keys call `move`, and `ctrl+escape` calls `tab_stack_cancel`.
 
 ## Verification
 
-- Run dev tools with `uv run`, for example `uv run ruff check .` and `uv run ruff format .`.
-- `pyproject.toml` only defines `ruff` settings.
-- Use `ruff check .` for linting via `uv run`.
-- Use `ruff format .` for formatting via `uv run`.
-- No repo-local test runner or task file is currently present.
+- Use `uv run ruff check .` for linting.
+- Use `uv run ruff format .` for formatting.
+- `pyproject.toml` only defines Ruff settings; there is no repo-local test runner.
