@@ -109,7 +109,7 @@ def _initial_index(state, entries: list[_Entry]) -> int:
     origin_id = state.session_origin_view_id
     if origin_id is None:
         return 0
-    for index, entry in enumerate(entries):
+    for entry in entries:
         if entry.view_id == origin_id:
             return 1 if len(entries) > 1 else 0
     return 0
