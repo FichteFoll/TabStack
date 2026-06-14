@@ -45,13 +45,6 @@ Use the same keys to move through the list while it is open.
 Release `ctrl` to commit the selected tab.
 Press `ctrl+escape` to cancel.
 
-### Technical Limitations
-
-- Due to gaps in the Sublime Text API,
-  it is currently not possible to trigger this package
-  via a key bindings
-  when a non-text view (image or HTML) is currently active.
-
 
 ## Platform Support
 

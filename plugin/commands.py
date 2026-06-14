@@ -9,9 +9,15 @@ from .state import get_state
 
 
 class ShowTabStackCommand(sublime_plugin.WindowCommand):
-    def run(self) -> None:
+    def run(self, *, forward=True) -> None:
         window = self.window
-        if window is None or not is_available():
+        if window is None:
+            return
+        elif not is_available():
+            window.run_command("next_view_in_stack" if forward else "prev_view_in_stack")
+            return
+        elif not forward:
+            # This is a fake binding.
             return
 
         state = get_state(window)
