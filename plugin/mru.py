@@ -17,7 +17,7 @@ class Entry:
 def collect_entries(window, history: SheetSelectionHistory) -> list[Entry]:
     entries: list[Entry] = []
     active_group = window.active_group()
-    seen_identities: set[tuple[str, int, str | None, str | None]] = set()
+    seen_identities: set[tuple[str | None, int, str | None, str | None]] = set()
 
     group_state_stack = history["groups"].get(str(active_group))
     if group_state_stack:
@@ -60,11 +60,11 @@ def _non_transient_sheets_in_group(window, group: int):
 
 def _selection_identity_keys(
     selection: GroupSelectionState,
-) -> set[tuple[str, int, str | None, str | None]]:
+) -> set[tuple[str | None, int, str | None, str | None]]:
     return {_identity_key(identity) for identity in selection["selected_sheets"]}
 
 
-def _identity_key(identity: SheetIdentity) -> tuple[str, int, str | None, str | None]:
+def _identity_key(identity: SheetIdentity) -> tuple[str | None, int, str | None, str | None]:
     return (
         identity["name"],
         identity["occurrence"],
