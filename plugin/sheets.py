@@ -1,22 +1,22 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import TYPE_CHECKING, TypedDict
+from typing import TYPE_CHECKING, Optional, TypedDict
 
 if TYPE_CHECKING:
     from .state import GroupSelectionState
 
 
 class SheetIdentity(TypedDict):
-    name: str | None
+    name: Optional[str]
     """The sheet name is `None` on ST builds <4205
     because the required API method does not exist there."""
     occurrence: int
-    kind: str | None
-    path: str | None
+    kind: Optional[str]
+    path: Optional[str]
 
 
-def active_sheet_identity(window) -> SheetIdentity | None:
+def active_sheet_identity(window) -> Optional[SheetIdentity]:
     sheet = window.active_sheet()
     if sheet is None:
         return None
@@ -74,7 +74,7 @@ def sheet_title(sheet) -> str:
     return "Untitled"
 
 
-def sheet_name(sheet) -> str | None:
+def sheet_name(sheet) -> Optional[str]:
     get_name = getattr(sheet, "name", None)
     return get_name() if get_name else None
 
