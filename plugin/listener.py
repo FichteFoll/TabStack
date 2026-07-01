@@ -42,11 +42,27 @@ class TabStackListener(sublime_plugin.EventListener):
             return
 
         state = get_state(window)
-        if state.session_active:
+
+        if view.element() is not None:
+            state.overlay_depth += 1
+            return
+
+        if state.session_active or state.overlay_active:
             return
 
         _ensure_selection_poller(window, state)
         sync_selection_history(window)
+
+    def on_deactivated(self, view) -> None:
+        if view.element() is None:
+            return
+
+        window = view.window()
+        if window is None:
+            return
+
+        state = get_state(window)
+        state.overlay_depth = max(0, state.overlay_depth - 1)
 
     def on_query_context(self, view, key, operator, operand, match_all):
         if key == "tab_stack.ctrl_release_available":

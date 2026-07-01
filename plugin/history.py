@@ -39,7 +39,11 @@ class SelectionHistoryPoller:
     def _poll(self) -> None:
         if not self._active:
             return
-        if not self._state.session_active:
+
+        # Do not snapshot while a (third-party) overlay
+        # (e.g. goto anything, which temporarily focuses sheets/tabs)
+        # is active.
+        if not self._state.session_active and not self._state.overlay_active:
             sync_selection_history(self._window)
         self._schedule()
 

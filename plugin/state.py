@@ -29,6 +29,17 @@ class TabStackWindowState:
     session_panel_reopening: bool = False
     selection_poller: Any = None
     ctrl_release_poller: Any = None
+    overlay_depth: int = 0
+    """Counter for nested overlay/quick-panel widget focus tracking.
+
+    We use a counter so a widget deactivating while another is still open
+    doesn't prematurely re-enable history syncing.
+    Example widgets are goto anything, goto symbol/reference or find panels.
+    """
+
+    @property
+    def overlay_active(self) -> bool:
+        return self.overlay_depth > 0
 
     def clear_session(self) -> None:
         self.session_active = False
